@@ -21,15 +21,13 @@ public class BiliBiliMessage {
 
     public static final short PROTOCOL_HEAD_LENGTH = 16;
 
-    private final int packageLength;
     private final short protocolHeadLength;
     private final DeviceType shortDeviceType;
     private final Action action;
     private final DeviceType longDeviceType;
     private final byte[] content;
 
-    public BiliBiliMessage(int packageLength, short protocolHeadLength, DeviceType shortDeviceType, Action action, DeviceType longDeviceType, byte[] content) {
-        this.packageLength = packageLength;
+    public BiliBiliMessage(short protocolHeadLength, DeviceType shortDeviceType, Action action, DeviceType longDeviceType, byte[] content) {
         this.protocolHeadLength = protocolHeadLength;
         this.shortDeviceType = shortDeviceType;
         this.action = action;
@@ -38,8 +36,7 @@ public class BiliBiliMessage {
     }
 
     public BiliBiliMessage(Action action, byte[] content) {
-        this(PROTOCOL_HEAD_LENGTH + content.length,
-                PROTOCOL_HEAD_LENGTH,
+        this(PROTOCOL_HEAD_LENGTH,
                 DeviceType.ANDROID,
                 action,
                 DeviceType.ANDROID,
@@ -95,6 +92,7 @@ public class BiliBiliMessage {
             loggerException.error("invalid action : {} ", value);
             return UNKNOWN;
         }
+
         public int getValue() {
             return value;
         }

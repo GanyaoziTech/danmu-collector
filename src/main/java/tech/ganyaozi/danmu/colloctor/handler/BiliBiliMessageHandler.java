@@ -64,7 +64,7 @@ public class BiliBiliMessageHandler extends SimpleChannelInboundHandler<BiliBili
                 }
                 break;
             default:
-                loggerException.info("[忽略] {} ", msg);
+                loggerException.info("[忽略] {} ", new String(msgBody));
         }
 
 

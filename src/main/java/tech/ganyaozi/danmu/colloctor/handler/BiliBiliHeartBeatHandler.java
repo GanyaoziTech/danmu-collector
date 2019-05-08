@@ -23,7 +23,6 @@ public class BiliBiliHeartBeatHandler extends SimpleChannelInboundHandler<BiliBi
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
-            loggerBusiness.info("[系统] 获取直播间人数...");
             ctx.writeAndFlush(new BiliBiliMessage(BiliBiliMessage.Action.HEART_BEAT, StringUtils.EMPTY.getBytes()));
         } else {
             super.userEventTriggered(ctx, evt);
