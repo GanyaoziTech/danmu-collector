@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Derek.p.dai@qq.com
@@ -35,7 +34,7 @@ public class ConsoleTool {
      * @param addSerialNum if need to show serial number before section
      * @return index the number scanned in, or -1 if input is invalid
      */
-    public static int ShowInConsole(ArrayList<String> list, boolean addSerialNum) {
+    public static int showInConsole(ArrayList<String> list, boolean addSerialNum) {
         try {
             showTables(list, addSerialNum);
 

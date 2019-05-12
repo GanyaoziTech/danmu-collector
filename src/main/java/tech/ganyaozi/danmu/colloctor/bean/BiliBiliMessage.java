@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * 9-12 字节: 数据包类型
  * 13-16 字节: 设备类型, 同 7-8 字节
  * 之后的字节为数据包正文, 大多数情况下为 JSON
+ * @author Derek
  */
 @Data
 public class BiliBiliMessage {
@@ -45,7 +46,9 @@ public class BiliBiliMessage {
     }
 
     public enum DeviceType {
-
+        /**
+         * 设备类型 android
+         */
         ANDROID(0x00);
 
         private final int value;
@@ -70,11 +73,29 @@ public class BiliBiliMessage {
     }
 
     public enum Action {
+        /**
+         * 心跳包，请求当前直播间人数
+         */
         HEART_BEAT(0x02),
+        /**
+         * 服务器返回当前直播间人数
+         */
         VIEWER_COUNT(0x03),
+        /**
+         * 正常的服务器消息
+         */
         MESSAGE(0x05),
+        /**
+         * 进入指定直播间
+         */
         ENTER_ROOM(0x07),
+        /**
+         * 进入直播间成功
+         */
         ENTER_ROOM_SUCCESS(0x08),
+        /**
+         * 所有未知的指令
+         */
         UNKNOWN(0x99);
 
         private final int value;

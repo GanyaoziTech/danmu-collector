@@ -20,6 +20,7 @@ public class BiliBiliMessageHandler extends SimpleChannelInboundHandler<BiliBili
     private static final Logger loggerBusiness = LoggerFactory.getLogger("business");
 
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, BiliBiliMessage msg) {
         if (msg == null) {
