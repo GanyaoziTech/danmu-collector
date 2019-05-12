@@ -8,13 +8,13 @@ import tech.ganyaozi.danmu.colloctor.handler.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
- **/
+ * @author Derek
+ */
 public class BiliBiliChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final String roomId;
+    private final Integer roomId;
 
-    public BiliBiliChannelInitializer(String roomId) {
+    public BiliBiliChannelInitializer(Integer roomId) {
         this.roomId = roomId;
     }
 

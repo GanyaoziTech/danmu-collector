@@ -11,6 +11,9 @@ import tech.ganyaozi.danmu.colloctor.bean.BiliBiliMessage;
 
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author Derek
+ */
 public class BiliBiliMessageHandler extends SimpleChannelInboundHandler<BiliBiliMessage> {
 
     private static final Logger loggerException = LoggerFactory.getLogger(BiliBiliMessageHandler.class);

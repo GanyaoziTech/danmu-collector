@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import tech.ganyaozi.danmu.colloctor.bean.BiliBiliMessage;
 
 
+/**
+ * @author Derek
+ */
 public class BiliBiliHeartBeatHandler extends SimpleChannelInboundHandler<BiliBiliMessage> {
 
     private static final Logger loggerBusiness = LoggerFactory.getLogger("business");

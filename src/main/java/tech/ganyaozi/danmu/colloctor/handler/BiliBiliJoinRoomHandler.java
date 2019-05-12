@@ -9,15 +9,18 @@ import tech.ganyaozi.danmu.colloctor.bean.BiliBiliMessage;
 import java.security.SecureRandom;
 
 
+/**
+ * @author Derek
+ */
 public class BiliBiliJoinRoomHandler extends SimpleChannelInboundHandler<BiliBiliMessage> {
 
     private static final Logger loggerBusiness = LoggerFactory.getLogger("business");
 
     private final SecureRandom random = new SecureRandom();
 
-    private final String roomId;
+    private final Integer roomId;
 
-    public BiliBiliJoinRoomHandler(String roomId) {
+    public BiliBiliJoinRoomHandler(Integer roomId) {
         this.roomId = roomId;
     }
 
@@ -40,7 +43,7 @@ public class BiliBiliJoinRoomHandler extends SimpleChannelInboundHandler<BiliBil
      * @param roomID 房间id
      * @return message
      */
-    private BiliBiliMessage buildJoinRoomMessage(String roomID) {
+    private BiliBiliMessage buildJoinRoomMessage(Integer roomID) {
         long uid = 1000000000 + (long) (2000000000 * random.nextDouble());
         String jsonBody = "{\"roomid\": " + roomID + ", \"uid\": " + uid + "}";
         return new BiliBiliMessage(BiliBiliMessage.Action.ENTER_ROOM,jsonBody.getBytes());

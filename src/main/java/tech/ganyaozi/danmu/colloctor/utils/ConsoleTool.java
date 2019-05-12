@@ -1,5 +1,6 @@
 package tech.ganyaozi.danmu.colloctor.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,40 +8,51 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * @author Derek.p.dai@qq.com
+ */
 public class ConsoleTool {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsoleTool.class);
 
-    private static String banner = "================================================================";
-    private static String border = "|";
-    private static String seperator = " : ";
-    private static int indent = 4; // 向左缩进的字符数
-    private static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    private static final String BANNER = "================================================================";
+    private static final String BORDER = "|";
+    private static final String SEPARATOR = " : ";
+    /**
+     * 向左缩进的字符数
+     */
+    private static final int DEFAULT_INDENT = 4;
+
+    private static final String[] DEFAULT_QUIT_CMD = {"quit", "q", "exit"};
+
+    private static final BufferedReader BUFFERED_READER = new BufferedReader(new InputStreamReader(System.in));
 
     /**
-     * @param strs         Strings to be shown
+     * @param list         Strings to be shown
      * @param addSerialNum if need to show serial number before section
      * @return index the number scanned in, or -1 if input is invalid
      */
-    public static int ShowInConsole(ArrayList<String> strs, boolean addSerialNum) {
+    public static int ShowInConsole(ArrayList<String> list, boolean addSerialNum) {
         try {
-            showTables(strs, addSerialNum);
+            showTables(list, addSerialNum);
 
-            String order = bufferedReader.readLine();
+            String order = BUFFERED_READER.readLine();
             if (order == null) {
                 return -1;
             }
-            if (order.matches("[0-9]+")) {
+            if (StringUtils.isNumeric(order)) {
                 int orderInt = Integer.valueOf(order);
-                if (orderInt < strs.size() && orderInt > -1) {
+                if (orderInt < list.size() && orderInt > -1) {
                     logger.info("\n\n");
                     return orderInt;
                 } else {
                     logger.error("Invalid number ! please input the number before selection \n");
                     return -1;
                 }
-            } else if (order.equals("exit") || order.equals("quit")) {
+            } else if (Arrays.binarySearch(DEFAULT_QUIT_CMD, order) > 0) {
                 return -1;
             } else {
                 logger.error("Invalid number ! please input the number before selection \n");
@@ -49,29 +61,29 @@ public class ConsoleTool {
         } catch (NumberFormatException e) {
             logger.error("Number is too large");
         } catch (IllegalArgumentException | IOException e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return -1;
     }
 
-    public static void showTables(ArrayList<String> testmethods, boolean AddNum) {
-        logger.info(banner);
-        for (int i = 0; i < testmethods.size(); i++) {
+    public static void showTables(ArrayList<String> list, boolean AddNum) {
+        logger.info(BANNER);
+        for (int i = 0; i < list.size(); i++) {
             StringBuilder name;
             if (AddNum) {
-                name = new StringBuilder(i + seperator + testmethods.get(i));
+                name = new StringBuilder(i + SEPARATOR + list.get(i));
             } else {
-                name = new StringBuilder(testmethods.get(i));
+                name = new StringBuilder(list.get(i));
             }
-            int rightSpace = banner.length() - name.toString().length() - indent - 2;
-            String line = border + mkSpacce(indent) + name.toString() + mkSpacce(rightSpace) + border;
+            int rightSpace = BANNER.length() - name.toString().length() - DEFAULT_INDENT - 2;
+            String line = BORDER + mkSpace(DEFAULT_INDENT) + name.toString() + mkSpace(rightSpace) + BORDER;
             logger.info(line);
         }
-        logger.info(banner);
+        logger.info(BANNER);
         logger.info("\n->");
     }
 
-    private static String mkSpacce(int i) {
+    private static String mkSpace(int i) {
         StringBuilder space = new StringBuilder();
         for (; i > 0; i--) {
             space.append(" ");
@@ -80,11 +92,11 @@ public class ConsoleTool {
     }
 
 
-    public static String readLine() {
+    public static String readLineUntilNotNull() {
         String input = null;
         do {
             try {
-                input = bufferedReader.readLine();
+                input = BUFFERED_READER.readLine();
                 if (input == null) {
                     logger.error("invalid input : null");
                 }
@@ -96,23 +108,26 @@ public class ConsoleTool {
 
     }
 
-    public static int readInt() {
+    public static int readIntUntilNotNull() {
         int input = -1;
-        String temp = null;
+        String temp;
         do {
             try {
-                temp = bufferedReader.readLine();
+                temp = BUFFERED_READER.readLine();
                 if (temp == null) {
                     logger.error("invalid input : null");
+                    continue;
                 }
-                input = Integer.valueOf(temp);
+                if (StringUtils.isNumeric(temp)) {
+                    input = Integer.valueOf(temp);
+                } else {
+                    logger.error("Invalid input : {} , Please type in a valid int", temp);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (NumberFormatException e) {
-                logger.error("Invalid input :" + temp);
-                logger.error("Please type in a valid int");
             }
         } while (input == -1);
+
         return input;
     }
 

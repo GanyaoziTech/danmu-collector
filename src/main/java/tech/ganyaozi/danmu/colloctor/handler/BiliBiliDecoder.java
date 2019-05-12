@@ -11,7 +11,16 @@ import static tech.ganyaozi.danmu.colloctor.bean.BiliBiliMessage.Action.VIEWER_C
 
 /**
  * B站数据解码
- **/
+ *
+ * BEFORE DECODE (16 bytes)                       AFTER DECODE (13 bytes)
+ * +--------+------+------+----------------+      +------+----------------+
+ * | Length | HDR1 | HDR1 | Actual Content |----->| HDR2 | Actual Content |
+ * | 0x0010 | 0xFE | 0xCA | "HELLO, WORLD" |      | 0xFE | "HELLO, WORLD" |
+ * +--------+------+------+----------------+      +------+----------------+
+ *
+ *
+ * @author Derek
+ */
 public class BiliBiliDecoder extends LengthFieldBasedFrameDecoder {
 
     public BiliBiliDecoder() {
@@ -22,27 +31,21 @@ public class BiliBiliDecoder extends LengthFieldBasedFrameDecoder {
     protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
         ByteBuf frame = (ByteBuf) super.decode(ctx, in);
 
-        short headLength;
-        short version;
-        int actionInt;
-        int extraParam;
-        String content;
-
         if (frame == null) {
             return null;
-        } else {
-            headLength = frame.readShort();
-            version = frame.readShort();
-            actionInt = frame.readInt();
-            extraParam = frame.readInt();
+        }
+        short headLength = frame.readShort();
+        short version = frame.readShort();
+        int actionInt = frame.readInt();
+        int extraParam = frame.readInt();
+        String content;
 
-            if (actionInt == VIEWER_COUNT.getValue()) {
-                content = frame.readInt() + "";
-            } else {
-                byte[] data = new byte[frame.readableBytes()];
-                frame.readBytes(data);
-                content = new String(data, StandardCharsets.UTF_8);
-            }
+        if (actionInt == VIEWER_COUNT.getValue()) {
+            content = frame.readInt() + "";
+        } else {
+            byte[] data = new byte[frame.readableBytes()];
+            frame.readBytes(data);
+            content = new String(data, StandardCharsets.UTF_8);
         }
 
         try {
@@ -51,7 +54,6 @@ public class BiliBiliDecoder extends LengthFieldBasedFrameDecoder {
             BiliBiliMessage.DeviceType longDeviceType = BiliBiliMessage.DeviceType.valueOf(extraParam);
             return new BiliBiliMessage(headLength, shortDeviceType, action, longDeviceType, content.getBytes());
         } finally {
-            //Trying to fix OOM of ByteBuf Unreleased.
             frame.release();
         }
     }

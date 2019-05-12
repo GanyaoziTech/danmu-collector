@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import tech.ganyaozi.danmu.colloctor.bean.BiliBiliMessage;
 
 /**
- *
- **/
+ * @author Derek
+ */
 public class BiliBiliEncoder extends MessageToByteEncoder<BiliBiliMessage> {
 
     private static final Logger loggerException = LoggerFactory.getLogger(BiliBiliEncoder.class);
@@ -17,10 +17,7 @@ public class BiliBiliEncoder extends MessageToByteEncoder<BiliBiliMessage> {
     @Override
     protected void encode(ChannelHandlerContext ctx, BiliBiliMessage msg, ByteBuf out) {
 
-        int dataLength = 0;
-        if (msg.getContent() != null) {
-            dataLength = msg.getContent().length;
-        }
+        int dataLength = msg.getContent() == null ? 0 : msg.getContent().length;
         //   int short short int int bytes[]
         int totalLength = dataLength + BiliBiliMessage.PROTOCOL_HEAD_LENGTH;
 

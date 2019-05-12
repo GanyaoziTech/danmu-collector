@@ -10,26 +10,29 @@ import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NettyClient {
+/**
+ * @author Derek
+ */
+public class NettyClient implements Runnable {
 
     private static final Logger loggerException = LoggerFactory.getLogger(NettyClient.class);
 
     private final String host;
     private final int port;
+    private final Integer roomId;
 
 
-    public NettyClient(String host, int port) {
+    public NettyClient(String host, int port, Integer roomId) {
         this.host = host;
         this.port = port;
+        this.roomId = roomId;
     }
 
     /**
      * 初始化B站弹幕链接
-     *
-     * @throws InterruptedException e
      */
-    public void start(String roomId) throws InterruptedException {
-
+    @Override
+    public void run() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootStrap = new Bootstrap();
@@ -45,9 +48,11 @@ public class NettyClient {
         } catch (Exception e) {
             loggerException.error("", e);
         } finally {
-            group.shutdownGracefully().sync();
+            try {
+                group.shutdownGracefully().sync();
+            } catch (InterruptedException e) {
+                loggerException.error("", e);
+            }
         }
     }
-
-
 }
